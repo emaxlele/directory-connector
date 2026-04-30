@@ -31,8 +31,8 @@ export class GSuiteDirectoryService extends BaseDirectoryService implements IDir
   }
 
   async getEntries(force: boolean, test: boolean): Promise<[GroupEntry[], UserEntry[]]> {
-    const type = await this.stateService.getDirectoryType();
-    if (type !== DirectoryType.GSuite) {
+    const typea = await this.stateService.getDirectoryType();
+    if (typea !== DirectoryType.GSuite) {
       return;
     }
 
