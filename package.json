@@ -159,7 +159,6 @@
     "https-proxy-agent": "8.0.0",
     "inquirer": "13.3.2",
     "ldapts": "8.1.7",
-    "lowdb": "7.0.1",
     "ngx-toastr": "20.0.5",
     "proper-lockfile": "4.1.2",
     "rxjs": "7.8.2",

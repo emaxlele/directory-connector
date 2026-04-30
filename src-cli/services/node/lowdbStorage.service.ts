@@ -1,19 +1,17 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import { LowSync } from "lowdb";
-import { JSONFileSync } from "lowdb/node";
-
 import { LogService } from "@/libs/abstractions/log.service";
 import { StorageService } from "@/libs/abstractions/storage.service";
 import { SecureStorageKey, StorageKey } from "@/libs/models/state.model";
+import { JsonFileSyncAdapter, SyncDatabase, SyncDb } from "@/libs/utils/lowdb-internal";
 import { NodeUtils } from "@/libs/utils/nodeUtils";
 import { sequentialize } from "@/libs/utils/sequentialize";
 import { Utils } from "@/libs/utils/utils";
 
 export class LowdbStorageService implements StorageService {
   protected dataFilePath: string;
-  private db: LowSync<Record<string, any>>;
+  private db: SyncDatabase<Record<string, any>>;
   private defaults: any;
   private ready = false;
 
@@ -33,7 +31,7 @@ export class LowdbStorageService implements StorageService {
     }
 
     this.logService.info("Initializing lowdb storage service.");
-    let adapter: JSONFileSync<Record<string, any>> | undefined;
+    let adapter: JsonFileSyncAdapter<Record<string, any>> | undefined;
     if (Utils.isNode && this.dir != null) {
       if (!fs.existsSync(this.dir)) {
         this.logService.warning(`Could not find dir, "${this.dir}"; creating it instead.`);
@@ -52,12 +50,12 @@ export class LowdbStorageService implements StorageService {
         this.logService.info(`db file "${this.dataFilePath} already exists"; using existing db`);
       }
       await this.lockDbFile(() => {
-        adapter = new JSONFileSync<Record<string, any>>(this.dataFilePath);
+        adapter = new JsonFileSyncAdapter<Record<string, any>>(this.dataFilePath);
       });
     }
     try {
       this.logService.info("Attempting to create lowdb storage adapter.");
-      this.db = new LowSync<Record<string, any>>(adapter, {});
+      this.db = new SyncDb<Record<string, any>>(adapter, {});
       this.db.read();
       this.logService.info("Successfully created lowdb storage adapter.");
     } catch (e) {
