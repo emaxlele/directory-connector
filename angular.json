@@ -43,7 +43,7 @@
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "customWebpackConfig": {
-              "path": "./webpack.main.cjs",
+              "path": "./webpack.main.mjs",
               "mergeStrategies": {
                 "entry": "replace",
                 "output": "replace",
@@ -55,7 +55,7 @@
                 "node": "replace"
               }
             },
-            "main": "src/main.ts",
+            "main": "src-gui/main.ts",
             "tsConfig": "tsconfig.json",
             "outputPath": "build"
           }
