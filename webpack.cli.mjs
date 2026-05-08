@@ -5,7 +5,6 @@ import { dirname } from "node:path";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
 import webpack from "webpack";
-import nodeExternals from "webpack-node-externals";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -39,14 +38,14 @@ const plugins = [
     raw: true,
   }),
   new webpack.IgnorePlugin({
-    resourceRegExp: /^encoding$/,
-    contextRegExp: /node-fetch/,
+    resourceRegExp: /^node-fetch$/,
+    contextRegExp: /gaxios/,
   }),
 ];
 
 const config = {
   mode: ENV,
-  target: "node22",
+  target: "node25",
   devtool: ENV === "development" ? "eval-source-map" : "source-map",
   node: {
     __dirname: "eval-only",
@@ -65,17 +64,23 @@ const config = {
     extensions: [".ts", ".js", ".json"],
     plugins: [new TsconfigPathsPlugin({ configFile: "./tsconfig.json" })],
     symlinks: false,
-    modules: [path.resolve("node_modules")],
+    modules: ["node_modules"],
+    alias: {
+      // dc-native uses import.meta.url to locate .node binaries, which breaks inside a
+      // Node SEA blob. This shim loads the .node file relative to process.execPath instead.
+      // pack-sea.mjs copies the .node files alongside the binary at build time.
+      "dc-native": path.resolve(__dirname, "scripts/dc-native-sea-shim.mjs"),
+    },
   },
   output: {
     filename: "[name].js",
     path: path.resolve(__dirname, "build-cli"),
     clean: true,
     module: true,
+    publicPath: "",
   },
   module: { rules: moduleRules },
   plugins: plugins,
-  externals: [nodeExternals({ importType: "module" })],
 };
 
 export default config;

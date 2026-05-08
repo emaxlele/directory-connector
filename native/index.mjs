@@ -12,7 +12,9 @@ let nativeBinding = null;
 
 function loadFirstAvailable(localFiles) {
   for (const localFile of localFiles) {
-    const filePath = join(__dirname, localFile);
+    // Resolve from __dirname, then rewrite asar paths to asar.unpacked for .node files
+    let filePath = join(__dirname, localFile);
+    filePath = filePath.replace(/\.asar([/\\])/, ".asar.unpacked$1");
     if (existsSync(filePath)) {
       return require(filePath);
     }
