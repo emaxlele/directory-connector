@@ -63,7 +63,14 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src-gui/**/*.ts", "src-gui/**/*.html", "src-cli/**/*.ts", "libs/**/*.ts", "*.ts", "*.mjs"]
+            "lintFilePatterns": [
+              "src-gui/**/*.ts",
+              "src-gui/**/*.html",
+              "src-cli/**/*.ts",
+              "libs/**/*.ts",
+              "*.ts",
+              "*.mjs"
+            ]
           }
         },
         "test": {
